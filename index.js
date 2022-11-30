@@ -3,12 +3,22 @@ const context = canvas.getContext('2d');
 
 // canvas.width = 1024;
 // canvas.height = 576;
+//test :)
 canvas.width = 640;
 canvas.height = 360;
 
 context.fillRect(0, 0, canvas.width, canvas.height);
 
 const gravity = 0.2;
+
+const background = new Sprite({
+    position: {
+      x: 0,
+      y: 0
+    },
+    imageSrc: './background/background_1.png'
+})
+
 
 class Sprite {
     constructor({ inPosition, inVelocity }) {
@@ -89,6 +99,7 @@ function animLoop() {
     window.requestAnimationFrame(animLoop);
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
+    background.update();
     playerOne.update();
     playerTwo.update();
 
