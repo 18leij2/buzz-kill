@@ -10,6 +10,15 @@ context.fillRect(0, 0, canvas.width, canvas.height);
 
 const gravity = 0.08;
 
+const background = new Sprite({
+    position: {
+      x: 0,
+      y: 0
+    },
+    imageSrc: './background/background_1.png'
+})
+
+
 class Sprite {
     constructor({ inPosition, inVelocity }) {
         this.position = inPosition;
