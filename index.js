@@ -3,6 +3,7 @@ const context = canvas.getContext('2d');
 
 // canvas.width = 1024;
 // canvas.height = 576;
+//test :)
 canvas.width = 640;
 canvas.height = 360;
 
