@@ -73,6 +73,7 @@ function animLoop() {
     window.requestAnimationFrame(animLoop);
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
+    background.update();
     playerOne.update();
     playerTwo.update();
 }
