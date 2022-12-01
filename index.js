@@ -37,6 +37,7 @@ class Sprite {
             height: 30
         }
         this.attacking = false;
+        this.health = 100;
     }
 
     sketch() {
@@ -104,9 +105,6 @@ const playerTwo = new Sprite({
     color: "red"
 });
 
-console.log(playerOne);
-console.log(playerTwo);
-
 const controlKeys = {
     d: {
         down: false
@@ -159,7 +157,8 @@ function animLoop() {
 
     if (attackCollision({ attacker: playerOne, opponent: playerTwo}) && playerOne.attacking) {
         playerOne.attacking = false;
-        console.log("yeehaw")
+        playerTwo.health -= 10;
+        document.querySelector('#playerTwoHealth').style.width = playerTwo.health + "%";
     }
 
     if (controlKeys.ArrowRight.down && lastKeyTwo === 'ArrowRight') {
@@ -170,7 +169,8 @@ function animLoop() {
 
     if (attackCollision({ attacker: playerTwo, opponent: playerOne}) && playerTwo.attacking) {
         playerTwo.attacking = false;
-        console.log("waheey")
+        playerOne.health -= 10;
+        document.querySelector('#playerOneHealth').style.width = playerOne.health + "%";
     }
 }
 
