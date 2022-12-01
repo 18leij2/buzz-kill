@@ -138,6 +138,34 @@ function attackCollision({ attacker, opponent }) {
     )
 }
 
+function calculateWinner({ playerOne, playerTwo, timerId }) {
+    clearTimeout(timerId);
+    document.querySelector("#textEnd").style.display = "flex";
+    if (playerOne.health === playerTwo.health && timer === 0) {
+        document.querySelector("#textEnd").innerHTML = "Tie"; 
+    } else if (playerOne.health > playerTwo.health) {
+        document.querySelector("#textEnd").innerHTML = "Player One Wins";
+    } else if (playerTwo.health > playerOne.health) {
+        document.querySelector("#textEnd").innerHTML = "Player Two Wins";
+    }
+}
+
+let timer = 60;
+let timerId;
+function decreaseTimer() {
+    if (timer > 0) {
+        timerId = setTimeout(decreaseTimer, 1000);
+        timer--;
+        document.querySelector("#timer").innerHTML = timer
+    }
+
+    if (timer === 0) {
+        calculateWinner({ playerOne, playerTwo }); 
+    }
+    
+}
+decreaseTimer();
+
 function animLoop() {
     window.requestAnimationFrame(animLoop);
     context.fillStyle = "black";
@@ -172,11 +200,15 @@ function animLoop() {
         playerOne.health -= 10;
         document.querySelector('#playerOneHealth').style.width = playerOne.health + "%";
     }
+
+    if (playerOne.health <= 0 || playerTwo.health <= 0) {
+        calculateWinner({ playerOne, playerTwo, timerId });
+    }
 }
 
 animLoop();
 
-window.addEventListener('keydown', (event ) => {
+window.addEventListener('keydown', (event) => {
     switch (event.key) {
         case 'd':
             controlKeys.d.down = true;
