@@ -175,6 +175,26 @@ const background = new Sprite({
     frames: 1
 })
 
+const titleScreen = new Sprite({
+    inPosition: {
+        x: 0,
+        y:0
+    },
+    imageSource: './background/TitleScreen.png',
+    scale: 1,
+    frames: 1
+})
+
+const selectionScreen = new Sprite({
+    inPosition: {
+        x: 0,
+        y:0
+    },
+    imageSource: './background/enemyScreen.png',
+    scale: 1,
+    frames: 1
+})
+
 const shop = new Sprite({
     inPosition: {
         x: 300,
