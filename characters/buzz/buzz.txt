@@ -1,5 +1,0 @@
-To-do:
-
-  finish Buzz-run 
-  finish Buzz-jump
-  finish Buzz-death
