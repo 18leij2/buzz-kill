@@ -195,6 +195,7 @@ const selectionScreen = new Sprite({
     frames: 1
 })
 
+
 const shop = new Sprite({
     inPosition: {
         x: 300,
@@ -315,6 +316,8 @@ function animLoop() {
     window.requestAnimationFrame(animLoop);
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
+    titleScreen.update();
+    selectionScreen.update();
     background.update();
     shop.update();
     playerOne.update();
