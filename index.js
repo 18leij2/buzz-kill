@@ -89,6 +89,7 @@ class Player extends Sprite {
         this.health = 100;
         this.offset = offset;
         this.sprites = sprites;
+        this.dead = false;
 
         for (const sprite in this.sprites) {
             sprites[sprite].image = new Image();
@@ -112,8 +113,10 @@ class Player extends Sprite {
     update() {
         this.sketch();
 
-        this.animateFrames();
-
+        if (!this.dead) {
+            this.animateFrames();
+        }
+        
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
         this.attackBox.position.y = this.position.y + this.attackBox.offset.y;
 
@@ -136,11 +139,23 @@ class Player extends Sprite {
     }
 
     takeHit() {
-        this.switchSprite("takeHit");
         this.health -= 10;
+
+        if (this.health <= 0) {
+            this.switchSprite("death");
+        } else {
+            this.switchSprite("takeHit");
+        }
     }
 
     switchSprite(sprite) {
+        if (this.image === this.sprites.death.image) {
+            if (this.curr === this.sprites.death.frames - 1) {
+                this.dead = true;
+            }
+            return;
+        }
+
         if (this.image === this.sprites.attack.image && this.curr < this.sprites.attack.frames - 1) {
             return;
         }
@@ -182,6 +197,13 @@ class Player extends Sprite {
                 if (this.image !== this.sprites.takeHit.image) {
                     this.image = this.sprites.takeHit.image;
                     this.frames = this.sprites.takeHit.frames;
+                    this.curr = 0;
+                }
+                break;
+            case "death":
+                if (this.image !== this.sprites.death.image) {
+                    this.image = this.sprites.death.image;
+                    this.frames = this.sprites.death.frames;
                     this.curr = 0;
                 }
                 break;
@@ -272,6 +294,10 @@ const playerOne = new Player({
         takeHit: {
             imageSource: './characters/buzz/buzz_hit.png',
             frames: 4
+        },
+        death: {
+            imageSource: './characters/buzz/buzz_death.png',
+            frames: 4
         }
     },
     attackBox: {
@@ -326,6 +352,10 @@ var playerTwo = new Player({
         takeHit: {
             imageSource: './characters/uga_hit.png',
             frames: 4
+        },
+        death: {
+            imageSource: './characters/uga_death.png',
+            frames: 8
         }
     },
     attackBox: {
@@ -404,6 +434,10 @@ function updatePlayerTwo() {
                 takeHit: {
                     imageSource: './characters/Gator_hit.png',
                     frames: 4
+                },
+                death: {
+                    imageSource: './characters/uga_death.png', // PLACEHOLDER ANIMATION
+                    frames: 8
                 }
             },
             attackBox: {
@@ -511,52 +545,67 @@ function animLoop() {
 animLoop();
 
 window.addEventListener('keydown', (event) => {
-    switch (event.key) {
-        case 'd':
-            controlKeys.d.down = true;
-            lastKeyOne = 'd';
-            break;
-        case 'a':
-            controlKeys.a.down = true;
-            lastKeyOne = 'a';
-            break;
-        case 'w':
-            playerOne.velocity.y = -5;
-            break;
-        case 'v':
-            playerOne.attack();
-            break;
-        case 'ArrowRight':
-            controlKeys.ArrowRight.down = true;
-            lastKeyTwo = 'ArrowRight';
-            break;
-        case 'ArrowLeft':
-            controlKeys.ArrowLeft.down = true;
-            lastKeyTwo = 'ArrowLeft';
-            break;
-        case 'ArrowUp':
-            playerTwo.velocity.y = -5;
-            break;
-        case '.':
-            playerTwo.attack();
-            break;
-        case ' ':
-            isMenu = false;
-            break;
+    if (!playerOne.dead) {
+        switch (event.key) {
+            case 'd':
+                controlKeys.d.down = true;
+                lastKeyOne = 'd';
+                break;
+            case 'a':
+                controlKeys.a.down = true;
+                lastKeyOne = 'a';
+                break;
+            case 'w':
+                playerOne.velocity.y = -5;
+                break;
+            case 'v':
+                playerOne.attack();
+                break;
+            case ' ':
+                isMenu = false;
+                break;
+        }
+    }
+    
+    console.log(event.key);
+
+    if (!playerTwo.dead) {
+        switch(event.key) {
+            case 'ArrowRight':
+                controlKeys.ArrowRight.down = true;
+                lastKeyTwo = 'ArrowRight';
+                break;
+            case 'ArrowLeft':
+                controlKeys.ArrowLeft.down = true;
+                lastKeyTwo = 'ArrowLeft';
+                break;
+            case 'ArrowUp':
+                playerTwo.velocity.y = -5;
+                break;
+            case '.':
+                playerTwo.attack();
+                break;
+        }
+    }
+
+    switch(event.key) {
         case '1':
-            document.getElementById("uiElement").style.visibility = "visible";
-            isSelect = false;
-            isStart = true;
+            if (!isMenu) {
+                document.getElementById("uiElement").style.visibility = "visible";
+                isSelect = false;
+                isStart = true;
+            }
             break;
         case '2':
-            document.getElementById("uiElement").style.visibility = "visible";
-            isCroc = true;
-            updatePlayerTwo();
-            isSelect = false;
-            isStart = true;
+            if (!isMenu) {
+                document.getElementById("uiElement").style.visibility = "visible";
+                isCroc = true;
+                updatePlayerTwo();
+                isSelect = false;
+                isStart = true;
+            }
             break;
     }
-    console.log(event.key);
 })
 
 window.addEventListener('keyup', (event ) => {
