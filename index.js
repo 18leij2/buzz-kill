@@ -476,7 +476,7 @@ function updatePlayerTwo() {
                     frames: 4
                 },
                 death: {
-                    imageSource: './characters/uga_death.png', // PLACEHOLDER ANIMATION
+                    imageSource: './characters/Gator_jump.png', // PLACEHOLDER ANIMATION
                     frames: 8
                 }
             },
