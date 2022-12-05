@@ -6,19 +6,8 @@
     </style>
 </head>
 <body>
+    <img id="img" src="/background/TitleScreen.aseprite"/>
     <img id="img" src="/background/selectionScreen.png"/>
-    <input type="button" value="START" style="background-color:aliceblue; color:blue;" id="btn" onclick = "clicked()" /><br></br>
-    <script>
-        function clicked() {
-            if(img==1) {
-                document.getElementById("img").style.display="inline";
-                return img=0;
-            } else {
-                document.getElementById("img").style.display="none";
-                return img=1;
-            }
-        }
-    </script>
     <div style="position: relative; display: inline-block;">
         <div style="position: absolute; display: flex; width: 100%; align-items: center; padding: 20px;">
             <div style="position: relative; height: 20px; width: 100%; display: flex; justify-content: flex-end;">
