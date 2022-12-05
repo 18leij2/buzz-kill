@@ -212,7 +212,7 @@ class Player extends Sprite {
 }
 
 // Initialize objects
-const background = new Sprite({
+var background = new Sprite({
     inPosition: {
         x: 0,
         y:0
@@ -220,7 +220,47 @@ const background = new Sprite({
     imageSource: './background/background_1.png',
     scale: 1,
     frames: 1
-})
+});
+
+var num = Math.floor(Math.random() * 3);
+
+switch (num) {
+    case 0:
+        background = new Sprite({
+            inPosition: {
+                x: 0,
+                y:0
+            },
+            imageSource: './background/background_1.png',
+            scale: 1,
+            frames: 1
+        });
+        break;
+    case 1:
+        background = new Sprite({
+            inPosition: {
+                x: 0,
+                y:0
+            },
+            imageSource: './background/background_2.png',
+            scale: 1,
+            frames: 1
+        });
+        break;
+    case 2:
+        background = new Sprite({
+            inPosition: {
+                x: 0,
+                y:0
+            },
+            imageSource: './background/background_3.png',
+            scale: 1,
+            frames: 1
+        });
+        break;
+}
+console.log(num)
+console.log(background.imageSource)
 
 const titleScreen = new Sprite({
     inPosition: {
@@ -459,10 +499,12 @@ function animLoop() {
     window.requestAnimationFrame(animLoop);
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
-    //selectionScreen.update();
+    // selectionScreen.update();
     background.update();
     
-    shop.update();
+    // shop.update();
+    context.fillStyle = 'rgba(255, 255, 255, 0.1)';
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
     if (isMenu) {
         titleScreen.update();
@@ -494,7 +536,10 @@ function animLoop() {
     if (attackCollision({ attacker: playerOne, opponent: playerTwo}) && playerOne.attacking && playerOne.curr === 2) {
         playerTwo.takeHit();
         playerOne.attacking = false;
-        document.querySelector('#playerTwoHealth').style.width = playerTwo.health + "%";
+        // document.querySelector('#playerTwoHealth').style.width = playerTwo.health + "%";
+        gsap.to('#playerTwoHealth', {
+            width: playerTwo.health + "%"
+        });
     }
 
     if (playerOne.attacking && playerOne.curr === 2) {
@@ -522,7 +567,10 @@ function animLoop() {
     if (attackCollision({ attacker: playerTwo, opponent: playerOne}) && playerTwo.attacking && playerTwo.curr === 2) {
         playerOne.takeHit();
         playerTwo.attacking = false;
-        document.querySelector('#playerOneHealth').style.width = playerOne.health + "%";
+        // document.querySelector('#playerOneHealth').style.width = playerOne.health + "%";
+        gsap.to('#playerOneHealth', {
+            width: playerOne.health + "%"
+        });
     }
 
     if (playerTwo.attacking && playerTwo.curr === 2) {
