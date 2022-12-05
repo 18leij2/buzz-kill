@@ -6,6 +6,11 @@ canvas.height = 360;
 context.fillRect(0, 0, canvas.width, canvas.height);
 const gravity = 0.2;
 let isCroc = false;
+let isMenu = true;
+let isSelect = true;
+let isStart = false;
+let buffer = true;
+document.getElementById("uiElement").style.visibility = "hidden";
 
 // Classes
 class Sprite {
@@ -306,58 +311,6 @@ let playerTwo = new Player({
     }
 });
 
-if (isCroc) { // UPDATE THIS WHEN LUKE GETS THE REST OF THE CROC MODELS
-    playerTwo = new Player({
-        inPosition: {
-            x: 400,
-            y: 100
-        },
-        inVelocity: {
-            x: 0,
-            y: 0
-        },
-        offset: {
-            x: -64,
-            y:0
-        },
-        color: "red",
-        imageSource: './characters/Gator_idle.png',
-        scale: 2,
-        frames: 2,
-        offset: {
-            x: 8,
-            y: 19
-        },
-        framesHold: 20,
-        sprites: {
-            idle: {
-                imageSource: './characters/Gator_idle.png',
-                frames: 2
-            },
-            run: {
-                imageSource: './characters/Gator_walk.png',
-                frames: 6
-            },
-            jump: {
-                imageSource: './characters/uga_jump_new.png',
-                frames: 4
-            },
-            attack: {
-                imageSource: './characters/uga_attack_new.png',
-                frames: 4
-            }
-        },
-        attackBox: {
-            offset: {
-                x: 0,
-                y: 0, 
-            },
-            width: 64,
-            height: 32
-        }
-    });
-}
-
 // Base mechanic functions
 const controlKeys = {
     d: {
@@ -380,21 +333,82 @@ const controlKeys = {
     }
 }
 
+function updatePlayerTwo() {
+    if (isCroc) { // UPDATE THIS WHEN LUKE GETS THE REST OF THE CROC MODELS
+        playerTwo = new Player({
+            inPosition: {
+                x: 400,
+                y: 100
+            },
+            inVelocity: {
+                x: 0,
+                y: 0
+            },
+            offset: {
+                x: -64,
+                y:0
+            },
+            color: "red",
+            imageSource: './characters/Gator_idle.png',
+            scale: 2,
+            frames: 2,
+            offset: {
+                x: 8,
+                y: 19
+            },
+            framesHold: 20,
+            sprites: {
+                idle: {
+                    imageSource: './characters/Gator_idle.png',
+                    frames: 2
+                },
+                run: {
+                    imageSource: './characters/Gator_walk.png',
+                    frames: 6
+                },
+                jump: {
+                    imageSource: './characters/uga_jump_new.png',
+                    frames: 4
+                },
+                attack: {
+                    imageSource: './characters/uga_attack_new.png',
+                    frames: 4
+                }
+            },
+            attackBox: {
+                offset: {
+                    x: 0,
+                    y: 0, 
+                },
+                width: 64,
+                height: 32
+            }
+        });
+    }
+}
+
 let lastKeyOne;
 let lastKeyTwo;
 
-titleScreen.update();
 function animLoop() {
     window.requestAnimationFrame(animLoop);
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
-    //titleScreen.update();
     //selectionScreen.update();
     background.update();
+    
     shop.update();
     playerOne.update();
     playerTwo.update();
 
+    if (isMenu) {
+        titleScreen.update();
+    } else if (isSelect) {
+        selectionScreen.update();
+    } else {
+        isStart = true;
+    }
+    
     playerOne.velocity.x = 0;
     playerTwo.velocity.x = 0;
 
@@ -449,8 +463,12 @@ function animLoop() {
     if (playerOne.health <= 0 || playerTwo.health <= 0) {
         calculateWinner({ playerOne, playerTwo, timerId });
     }
+
+    if (isStart && buffer) {
+        buffer = false;
+        decreaseTimer();
+    }
 }
-//titleScreen.update();
 animLoop();
 
 window.addEventListener('keydown', (event) => {
@@ -482,6 +500,21 @@ window.addEventListener('keydown', (event) => {
             break;
         case '.':
             playerTwo.attack();
+            break;
+        case ' ':
+            isMenu = false;
+            break;
+        case '1':
+            document.getElementById("uiElement").style.visibility = "visible";
+            isSelect = false;
+            isStart = true;
+            break;
+        case '2':
+            document.getElementById("uiElement").style.visibility = "visible";
+            isCroc = true;
+            updatePlayerTwo();
+            isSelect = false;
+            isStart = true;
             break;
     }
     console.log(event.key);
@@ -547,7 +580,7 @@ function decreaseTimer() {
     if (timer > 0) {
         timerId = setTimeout(decreaseTimer, 1000);
         timer--;
-        document.querySelector("#timer").innerHTML = timer
+        document.querySelector("#timer").innerHTML = timer;
     }
 
     if (timer === 0) {
@@ -555,4 +588,3 @@ function decreaseTimer() {
     }
     
 }
-decreaseTimer();
