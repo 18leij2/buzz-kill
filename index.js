@@ -155,16 +155,18 @@ class Player extends Sprite {
                 }
                 break;
             case "jump":
-                if (this.image !== this.sprites.jump.image)
-                this.image = this.sprites.jump.image;
-                this.frames = this.sprites.jump.frames;
-                this.curr = 0;
+                if (this.image !== this.sprites.jump.image) {
+                    this.image = this.sprites.jump.image;
+                    this.frames = this.sprites.jump.frames;
+                    this.curr = 0;
+                }
                 break;
             case "attack":
-                if (this.image !== this.sprites.attack.image)
-                this.image = this.sprites.attack.image;
-                this.frames = this.sprites.attack.frames;
-                this.curr = 0;
+                if (this.image !== this.sprites.attack.image) {
+                    this.image = this.sprites.attack.image;
+                    this.frames = this.sprites.attack.frames;
+                    this.curr = 0;
+                }
                 break;
         }
     }
@@ -261,7 +263,7 @@ const playerOne = new Player({
     }
 });
 
-let playerTwo = new Player({
+var playerTwo = new Player({
     inPosition: {
         x: 400,
         y: 100
@@ -334,7 +336,7 @@ const controlKeys = {
 }
 
 function updatePlayerTwo() {
-    if (isCroc) { // UPDATE THIS WHEN LUKE GETS THE REST OF THE CROC MODELS
+    if (isCroc) {
         playerTwo = new Player({
             inPosition: {
                 x: 400,
@@ -350,11 +352,11 @@ function updatePlayerTwo() {
             },
             color: "red",
             imageSource: './characters/Gator_idle.png',
-            scale: 2,
+            scale: 1.25,
             frames: 2,
             offset: {
-                x: 8,
-                y: 19
+                x: 40,
+                y: 21
             },
             framesHold: 20,
             sprites: {
@@ -367,20 +369,20 @@ function updatePlayerTwo() {
                     frames: 6
                 },
                 jump: {
-                    imageSource: './characters/uga_jump_new.png',
+                    imageSource: './characters/Gator_jump.png',
                     frames: 4
                 },
                 attack: {
-                    imageSource: './characters/uga_attack_new.png',
+                    imageSource: './characters/Gator_attack.png',
                     frames: 4
                 }
             },
             attackBox: {
                 offset: {
-                    x: 0,
+                    x: -28,
                     y: 0, 
                 },
-                width: 64,
+                width: 40,
                 height: 32
             }
         });
@@ -398,8 +400,6 @@ function animLoop() {
     background.update();
     
     shop.update();
-    playerOne.update();
-    playerTwo.update();
 
     if (isMenu) {
         titleScreen.update();
@@ -407,6 +407,8 @@ function animLoop() {
         selectionScreen.update();
     } else {
         isStart = true;
+        playerOne.update();
+        playerTwo.update();
     }
     
     playerOne.velocity.x = 0;
@@ -414,11 +416,15 @@ function animLoop() {
 
     if (controlKeys.d.down && lastKeyOne === 'd') {
         playerOne.velocity.x = 3;
-        playerOne.switchSprite("run");
+        if (playerOne.velocity.y >= 0) {
+            playerOne.switchSprite("run");
+        } 
     } else if (controlKeys.a.down && lastKeyOne === 'a') {
         playerOne.velocity.x = -3;
-        playerOne.switchSprite("run");
-    } else {
+        if (playerOne.velocity.y >= 0) {
+            playerOne.switchSprite("run");
+        } 
+    } else if (playerOne.velocity.y >= 0) {
         playerOne.switchSprite("idle");
     }
 
@@ -438,11 +444,15 @@ function animLoop() {
 
     if (controlKeys.ArrowRight.down && lastKeyTwo === 'ArrowRight') {
         playerTwo.velocity.x = 3;
-        playerTwo.switchSprite("run");
+        if (playerTwo.velocity.y >= 0) {
+            playerTwo.switchSprite("run");
+        } 
     } else if (controlKeys.ArrowLeft.down && lastKeyTwo === 'ArrowLeft') {
         playerTwo.velocity.x = -3;
-        playerTwo.switchSprite("run");
-    } else {
+        if (playerTwo.velocity.y >= 0) {
+            playerTwo.switchSprite("run");
+        } 
+    } else if (playerTwo.velocity.y >= 0){
         playerTwo.switchSprite("idle");
     }
 
