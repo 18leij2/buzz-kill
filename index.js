@@ -387,8 +387,8 @@ function animLoop() {
     window.requestAnimationFrame(animLoop);
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
-    // titleScreen.update();
-    // selectionScreen.update();
+    titleScreen.update();
+    selectionScreen.update();
     background.update();
     shop.update();
     playerOne.update();
