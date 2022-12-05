@@ -477,7 +477,7 @@ function updatePlayerTwo() {
                 },
                 death: {
                     imageSource: './characters/Gator_jump.png', // PLACEHOLDER ANIMATION
-                    frames: 8
+                    frames: 4
                 }
             },
             attackBox: {
