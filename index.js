@@ -135,10 +135,20 @@ class Player extends Sprite {
         this.attacking = true;
     }
 
+    takeHit() {
+        this.switchSprite("takeHit");
+        this.health -= 10;
+    }
+
     switchSprite(sprite) {
         if (this.image === this.sprites.attack.image && this.curr < this.sprites.attack.frames - 1) {
             return;
         }
+
+        if (this.image === this.sprites.takeHit.image && this.curr < this.sprites.takeHit.frames - 1) {
+            return;
+        }
+
         switch (sprite) {
             case "idle":
                 if (this.image !== this.sprites.idle.image) {
@@ -165,6 +175,13 @@ class Player extends Sprite {
                 if (this.image !== this.sprites.attack.image) {
                     this.image = this.sprites.attack.image;
                     this.frames = this.sprites.attack.frames;
+                    this.curr = 0;
+                }
+                break;
+            case "takeHit":
+                if (this.image !== this.sprites.takeHit.image) {
+                    this.image = this.sprites.takeHit.image;
+                    this.frames = this.sprites.takeHit.frames;
                     this.curr = 0;
                 }
                 break;
@@ -251,6 +268,10 @@ const playerOne = new Player({
         attack: {
             imageSource: './characters/buzz/buzz_attack.png',
             frames: 4
+        },
+        takeHit: {
+            imageSource: './characters/buzz/buzz_hit.png',
+            frames: 4
         }
     },
     attackBox: {
@@ -300,6 +321,10 @@ var playerTwo = new Player({
         },
         attack: {
             imageSource: './characters/uga_attack_new.png',
+            frames: 4
+        },
+        takeHit: {
+            imageSource: './characters/uga_hit.png',
             frames: 4
         }
     },
@@ -375,6 +400,10 @@ function updatePlayerTwo() {
                 attack: {
                     imageSource: './characters/Gator_attack.png',
                     frames: 4
+                },
+                takeHit: {
+                    imageSource: './characters/Gator_hit.png',
+                    frames: 4
                 }
             },
             attackBox: {
@@ -429,8 +458,8 @@ function animLoop() {
     }
 
     if (attackCollision({ attacker: playerOne, opponent: playerTwo}) && playerOne.attacking && playerOne.curr === 2) {
+        playerTwo.takeHit();
         playerOne.attacking = false;
-        playerTwo.health -= 10;
         document.querySelector('#playerTwoHealth').style.width = playerTwo.health + "%";
     }
 
@@ -456,9 +485,9 @@ function animLoop() {
         playerTwo.switchSprite("idle");
     }
 
-    if (attackCollision({ attacker: playerTwo, opponent: playerOne}) && playerTwo.attacking && playerTwo.curr === 1) {
+    if (attackCollision({ attacker: playerTwo, opponent: playerOne}) && playerTwo.attacking && playerTwo.curr === 2) {
+        playerOne.takeHit();
         playerTwo.attacking = false;
-        playerOne.health -= 10;
         document.querySelector('#playerOneHealth').style.width = playerOne.health + "%";
     }
 
