@@ -508,8 +508,8 @@ function animLoop() {
 
     if (isMenu) {
         titleScreen.update();
-    } else if (isSelect) {
-        selectionScreen.update();
+    //} //else if (isSelect) {
+        //selectionScreen.update();
     } else {
         isStart = true;
         playerOne.update();
