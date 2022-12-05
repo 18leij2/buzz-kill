@@ -5,6 +5,7 @@ canvas.width = 640;
 canvas.height = 360;
 context.fillRect(0, 0, canvas.width, canvas.height);
 const gravity = 0.2;
+let isCroc = false;
 
 // Classes
 class Sprite {
@@ -30,7 +31,7 @@ class Sprite {
             this.image.width / this.frames,
             this.image.height,
             this.position.x - this.offset.x, 
-            this.position.y- this.offset.y, 
+            this.position.y - this.offset.y, 
             (this.image.width / this.frames) * this.scale, 
             this.image.height * this.scale);
     }
@@ -54,7 +55,8 @@ class Sprite {
 
 class Player extends Sprite {
     constructor({ inPosition, inVelocity, color = "blue", imageSource, 
-    scale = 1, frames = 1, curr, framesElapsed, framesHold, offset = { x: 0, y: 0 }, sprites }) {
+    scale = 1, frames = 1, curr, framesElapsed, framesHold, offset = { x: 0, y: 0 }, sprites, 
+    attackBox = { offset: {}, width: undefined, height: undefined } }) {
         super({
             inPosition,
             imageSource,
@@ -74,9 +76,9 @@ class Player extends Sprite {
                 x: this.position.x,
                 y: this.position.y
             },
-            offset: offset,
-            width: 100,
-            height: 30
+            offset: attackBox.offset,
+            width: attackBox.width,
+            height: attackBox.height
         }
         this.attacking = false;
         this.health = 100;
@@ -108,7 +110,10 @@ class Player extends Sprite {
         this.animateFrames();
 
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
-        this.attackBox.position.y = this.position.y;
+        this.attackBox.position.y = this.position.y + this.attackBox.offset.y;
+
+        // context.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width, this.attackBox.height);
+
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
 
@@ -123,10 +128,6 @@ class Player extends Sprite {
     attack() {
         this.switchSprite("attack");
         this.attacking = true;
-
-        setTimeout(() => {
-            this.attacking = false;
-        }, 100)
     }
 
     switchSprite(sprite) {
@@ -154,12 +155,12 @@ class Player extends Sprite {
                 this.frames = this.sprites.jump.frames;
                 this.curr = 0;
                 break;
-                case "attack":
-                    if (this.image !== this.sprites.attack.image)
-                    this.image = this.sprites.attack.image;
-                    this.frames = this.sprites.attack.frames;
-                    this.curr = 0;
-                    break;
+            case "attack":
+                if (this.image !== this.sprites.attack.image)
+                this.image = this.sprites.attack.image;
+                this.frames = this.sprites.attack.frames;
+                this.curr = 0;
+                break;
         }
     }
 }
@@ -219,34 +220,43 @@ const playerOne = new Player({
         x: 0,
         y:0
     },
-    imageSource: './characters/uga_idle.png',
-    scale: 2,
+    imageSource: './characters/buzz/buzz_idle.png',
+    scale: 1.25,
     frames: 2,
     offset: {
-        x: 8,
-        y: 19
+        x: 0,
+        y: 16
     },
+    framesHold: 15,
     sprites: {
         idle: {
-            imageSource: './characters/uga_idle.png',
+            imageSource: './characters/buzz/buzz_idle.png',
             frames: 2
         },
         run: {
-            imageSource: './characters/uga_run.png',
-            frames: 7
+            imageSource: './characters/buzz/buzz_run.png',
+            frames: 4
         },
         jump: {
-            imageSource: './characters/uga_jump.png',
-            frames: 4
+            imageSource: './characters/buzz/buzz_jump.png',
+            frames: 5
         },
         attack: {
-            imageSource: './characters/uga_attack.png',
+            imageSource: './characters/buzz/buzz_attack.png',
             frames: 4
         }
+    },
+    attackBox: {
+        offset: {
+            x: 51,
+            y: 10, 
+        },
+        width: 45,
+        height: 32
     }
 });
 
-const playerTwo = new Player({
+let playerTwo = new Player({
     inPosition: {
         x: 400,
         y: 100
@@ -261,12 +271,13 @@ const playerTwo = new Player({
     },
     color: "red",
     imageSource: './characters/uga_idle_new.png',
-    scale: 2,
+    scale: 1.75,
     frames: 2,
     offset: {
         x: 8,
-        y: 19
+        y: 8
     },
+    framesHold: 20,
     sprites: {
         idle: {
             imageSource: './characters/uga_idle_new.png',
@@ -284,8 +295,68 @@ const playerTwo = new Player({
             imageSource: './characters/uga_attack_new.png',
             frames: 4
         }
+    },
+    attackBox: {
+        offset: {
+            x: -3,
+            y: 10, 
+        },
+        width: 35,
+        height: 32
     }
 });
+
+if (isCroc) { // UPDATE THIS WHEN LUKE GETS THE REST OF THE CROC MODELS
+    playerTwo = new Player({
+        inPosition: {
+            x: 400,
+            y: 100
+        },
+        inVelocity: {
+            x: 0,
+            y: 0
+        },
+        offset: {
+            x: -64,
+            y:0
+        },
+        color: "red",
+        imageSource: './characters/Gator_idle.png',
+        scale: 2,
+        frames: 2,
+        offset: {
+            x: 8,
+            y: 19
+        },
+        framesHold: 20,
+        sprites: {
+            idle: {
+                imageSource: './characters/Gator_idle.png',
+                frames: 2
+            },
+            run: {
+                imageSource: './characters/Gator_walk.png',
+                frames: 6
+            },
+            jump: {
+                imageSource: './characters/uga_jump_new.png',
+                frames: 4
+            },
+            attack: {
+                imageSource: './characters/uga_attack_new.png',
+                frames: 4
+            }
+        },
+        attackBox: {
+            offset: {
+                x: 0,
+                y: 0, 
+            },
+            width: 64,
+            height: 32
+        }
+    });
+}
 
 // Base mechanic functions
 const controlKeys = {
@@ -316,8 +387,8 @@ function animLoop() {
     window.requestAnimationFrame(animLoop);
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
-    titleScreen.update();
-    selectionScreen.update();
+    // titleScreen.update();
+    // selectionScreen.update();
     background.update();
     shop.update();
     playerOne.update();
@@ -336,10 +407,14 @@ function animLoop() {
         playerOne.switchSprite("idle");
     }
 
-    if (attackCollision({ attacker: playerOne, opponent: playerTwo}) && playerOne.attacking) {
+    if (attackCollision({ attacker: playerOne, opponent: playerTwo}) && playerOne.attacking && playerOne.curr === 2) {
         playerOne.attacking = false;
         playerTwo.health -= 10;
         document.querySelector('#playerTwoHealth').style.width = playerTwo.health + "%";
+    }
+
+    if (playerOne.attacking && playerOne.curr === 2) {
+        playerOne.attacking = false;
     }
 
     if (playerOne.velocity.y < 0) {
@@ -356,10 +431,14 @@ function animLoop() {
         playerTwo.switchSprite("idle");
     }
 
-    if (attackCollision({ attacker: playerTwo, opponent: playerOne}) && playerTwo.attacking) {
+    if (attackCollision({ attacker: playerTwo, opponent: playerOne}) && playerTwo.attacking && playerTwo.curr === 1) {
         playerTwo.attacking = false;
         playerOne.health -= 10;
         document.querySelector('#playerOneHealth').style.width = playerOne.health + "%";
+    }
+
+    if (playerTwo.attacking && playerTwo.curr === 2) {
+        playerTwo.attacking = false;
     }
 
     if (playerTwo.velocity.y < 0) {
@@ -432,12 +511,21 @@ window.addEventListener('keyup', (event ) => {
 
 // Utility functions
 function attackCollision({ attacker, opponent }) {
-    return (
-        attacker.attackBox.position.x + attacker.attackBox.width >= opponent.position.x &&
-        attacker.attackBox.position.x <= opponent.position.x + opponent.width &&
-        attacker.attackBox.position.y + attacker.attackBox.height >= opponent.position.y &&
-        attacker.attackBox.position.y <= opponent.position.y + opponent.height
-    )
+    if (attacker === playerOne) {
+        return (
+            attacker.attackBox.position.x + attacker.attackBox.width >= opponent.attackBox.position.x + opponent.attackBox.width &&
+            attacker.attackBox.position.x <= opponent.position.x + opponent.width &&
+            attacker.attackBox.position.y + attacker.attackBox.height >= opponent.position.y &&
+            attacker.attackBox.position.y <= opponent.position.y + opponent.height
+        )
+    } else if (attacker === playerTwo) {
+        return (
+            attacker.attackBox.position.x <= opponent.attackBox.position.x &&
+            attacker.attackBox.position.x >= opponent.position.x &&
+            attacker.attackBox.position.y + attacker.attackBox.height >= opponent.position.y &&
+            attacker.attackBox.position.y <= opponent.position.y + opponent.height
+        )
+    }
 }
 
 function calculateWinner({ playerOne, playerTwo, timerId }) {
