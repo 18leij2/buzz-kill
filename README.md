@@ -17,7 +17,7 @@ Jason Lei\
 Victoria Nguyen\
 Ansley Franks\
 Luke Choi\
-Rachel Young\
+Rachel Young
 
 ## Project Setup
 This game is a Unity project. To access it, download the project as a ZIP, extract the folder, and open it as an existing project through Unity Hub.
