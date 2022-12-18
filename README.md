@@ -13,12 +13,11 @@ Move: Arrow Keys\
 Attack: `.` key
 
 ## Contributors
-Jason Lei
-Victoria Nguyen
-Ansley Franks
-Luke Choi
-Rachel Young
+Jason Lei\
+Victoria Nguyen\
+Ansley Franks\
+Luke Choi\
+Rachel Young\
 
-
-
+## Project Setup
 This game is a Unity project. To access it, download the project as a ZIP, extract the folder, and open it as an existing project through Unity Hub.
